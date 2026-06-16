@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: java-stub
+  datasource:
+    url: jdbc:postgresql://161.104.32.243:5432/load_db
+    username: load
+    password: PASSWORD
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  kafka:
+    bootstrap-servers: 161.104.32.243:9092
+    consumer:
+      group-id: pipeline-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
