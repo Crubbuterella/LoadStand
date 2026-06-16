@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: kafka-client-processor
+
+  # PostgreSQL: 161.104.32.243:5432, база load_db
+  datasource:
+    url: jdbc:postgresql://161.104.32.243:5432/load_db?connectTimeout=10&socketTimeout=30
+    username: load
+    password: PASSWORD
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Kafka: 161.104.32.243:9092
+  kafka:
+    bootstrap-servers: 161.104.32.243:9092
+    consumer:
+      group-id: client-processor-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+app:
+  kafka:
+    input-topic: topic1
+    output-topic: message-out
