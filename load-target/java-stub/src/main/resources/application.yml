@@ -37,3 +37,34 @@ app:
   kafka:
     input-topic: topic1
     output-topic: message-out
+
+# HTTP-порт для Actuator (REST API приложения нет, только метрики)
+server:
+  port: 8081
+
+# Actuator + экспорт метрик JVM/Kafka/БД в формате Prometheus
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: kafka-client-processor
+    enable:
+      jvm: true
+      process: true
+      system: true
+      logback: true
+      hikaricp: true
+      jdbc: true
+      kafka: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true

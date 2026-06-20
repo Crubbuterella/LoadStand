@@ -9,23 +9,15 @@ import jakarta.persistence.Table;
 
 import java.util.UUID;
 
-/**
- * Сущность, соответствующая строке таблицы {@code clients} в PostgreSQL.
- */
+/** Сущность, соответствующая строке таблицы clients в PostgreSQL. */
 @Entity
 @Table(name = "clients")
 public class Client {
 
-    /** Автоинкрементный первичный ключ записи в БД. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * Идентификатор сообщения из Kafka (поле {@code msg_id} в JSON).
-     * В БД столбец называется {@code msgId} и имеет тип UUID.
-     * Кавычки в имени столбца нужны из-за camelCase в PostgreSQL.
-     */
     @Column(name = "\"msgId\"", nullable = false)
     private UUID msgId;
 
@@ -35,7 +27,6 @@ public class Client {
     @Column(nullable = false)
     private String inn;
 
-    /** Время сохранения записи в формате {@code yyyy-MM-dd HH:mm}. */
     @Column
     private String time;
 

@@ -6,9 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Структура JSON из value входящего Kafka-сообщения (топик topic1).
- * <p>
- * Пример:
- * {@code {"msg_id": "uuid", "inn": "123456789012", "full_name": "Иванов Иван"}}
+ * Пример: {"msg_id": "uuid", "inn": "123456789012", "full_name": "Иванов Иван"}
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InboundMessage {

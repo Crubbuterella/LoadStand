@@ -10,9 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-/**
- * Бизнес-логика сохранения клиента в PostgreSQL.
- */
+/** Логика сохранения клиента в PostgreSQL. */
 @Service
 public class ClientService {
 
@@ -27,9 +25,8 @@ public class ClientService {
 
     /**
      * Создаёт запись в таблице clients на основе данных из Kafka-сообщения.
-     *
-     * @param message распарсенный JSON из value топика topic1
-     * @return сохранённая сущность с присвоенным id
+     * message - распарсенный JSON из топика topic1
+     * return - сохраняемая сущность с присвоенным id
      */
     @Transactional
     public Client saveFromMessage(InboundMessage message) {

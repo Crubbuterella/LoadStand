@@ -2,9 +2,7 @@ package com.example.kafkaclient.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/**
- * Имена Kafka-топиков из application.yml (секция app.kafka).
- */
+/** Имена Kafka-топиков из application.yml (секция app.kafka). */
 @ConfigurationProperties(prefix = "app.kafka")
 public class KafkaProperties {
 

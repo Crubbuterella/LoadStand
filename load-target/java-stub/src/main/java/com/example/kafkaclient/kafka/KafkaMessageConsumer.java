@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * Слушатель входящих Kafka-сообщений.
- * <p>
  * Поток обработки:
  * 1. Получить JSON из value топика topic1 (key не используется)
  * 2. Распарсить поля msg_id, inn, full_name

@@ -5,8 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * Точка входа приложения.
- * <p>
- * После запуска Spring Boot поднимает Kafka-consumer (топик topic1),
+ * После запуска Spring Boot поднимает Kafka-consumer топик topic1
  * подключается к PostgreSQL и начинает обрабатывать входящие сообщения.
  */
 @SpringBootApplication

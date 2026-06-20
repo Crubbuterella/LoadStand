@@ -2,9 +2,8 @@ package com.example.kafkaclient.dto;
 
 /**
  * Структура JSON для исходящего Kafka-сообщения (топик message-out).
- * <p>
  * Отправляется после успешной записи клиента в БД.
- * Пример: {@code {"id": 1, "time": "2026-02-12 15:06"}}
+ * Пример: {"id": 1, "time": "2026-02-12 15:06"}
  */
 public class OutboundMessage {
 

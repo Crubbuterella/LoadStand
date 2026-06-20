@@ -9,9 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-/**
- * Отправка результата обработки в исходящий Kafka-топик message-out.
- */
+/** Отправка результата обработки в исходящий Kafka-топик message-out. */
 @Component
 public class KafkaMessageProducer {
 

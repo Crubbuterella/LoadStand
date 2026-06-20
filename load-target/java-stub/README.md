@@ -52,16 +52,77 @@ Spring Boot приложение, которое:
 mvn spring-boot:run
 ```
 
-Параметры подключения заданы в `application.yml`. При необходимости их можно переопределить переменными окружения:
+Сборка JAR:
 
-| Переменная                 | По умолчанию              |
-|----------------------------|---------------------------|
-| `DB_HOST`                  | `161.104.32.243`          |
-| `DB_PORT`                  | `5432`                    |
-| `DB_NAME`                  | `load_db`                 |
-| `DB_USER`                  | `load`                    |
-| `DB_PASSWORD`              | *(см. application.yml)*   |
-| `KAFKA_BOOTSTRAP_SERVERS`  | `161.104.32.243:9092`     |
-| `KAFKA_INPUT_TOPIC`        | `topic1`                  |
-| `KAFKA_OUTPUT_TOPIC`       | `message-out`             |
-| `KAFKA_CONSUMER_GROUP`     | `client-processor-group`  |
+```bash
+mvn clean package -DskipTests
+java -Xmx750m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./heapdump.hprof \
+  -jar target/kafka-client-processor-1.0.0-SNAPSHOT.jar
+```
+
+## Мониторинг (Actuator + Prometheus + Grafana)
+
+### Endpoints Actuator
+
+После запуска доступны на порту **8081**:
+
+| URL | Назначение |
+|-----|------------|
+| `http://localhost:8081/actuator/health` | Состояние приложения |
+| `http://localhost:8081/actuator/prometheus` | Метрики в формате Prometheus |
+
+Собираются стандартные метрики JVM (heap, GC, threads), процесса, HikariCP, JDBC, Kafka и Spring Boot.
+
+### Prometheus
+
+Пример job для `prometheus.yml` — см. [monitoring/prometheus.yml](monitoring/prometheus.yml):
+
+```yaml
+scrape_configs:
+  - job_name: kafka-client-processor
+    metrics_path: /actuator/prometheus
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+          - <host-приложения>:8081
+```
+
+Перезагрузите конфигурацию Prometheus:
+
+```bash
+curl -X POST http://<prometheus-host>:9090/-/reload
+```
+
+Проверка в UI Prometheus: **Status → Targets** — job должен быть в состоянии **UP**.
+
+### Grafana
+
+1. **Connections → Data sources → Add data source → Prometheus**
+2. URL: `http://<prometheus-host>:9090`
+3. **Save & test**
+
+Примеры PromQL-запросов для дашборда:
+
+```promql
+# Использование heap JVM
+jvm_memory_used_bytes{application="kafka-client-processor", area="heap"}
+
+# Лимит heap
+jvm_memory_max_bytes{application="kafka-client-processor", area="heap"}
+
+# GC-пause
+rate(jvm_gc_pause_seconds_sum{application="kafka-client-processor"}[5m])
+
+# Активные потоки
+jvm_threads_live_threads{application="kafka-client-processor"}
+
+# Пул соединений БД (HikariCP)
+hikaricp_connections_active{application="kafka-client-processor"}
+
+# Lag consumer Kafka (если доступна метрика)
+kafka_consumer_fetch_manager_records_lag{application="kafka-client-processor"}
+```
+
+Готовые дашборды: в Grafana импортируйте **Dashboard ID 4701** (JVM Micrometer) или **11378** (Spring Boot 2.x/3.x Statistics) — укажите ваш Prometheus data source.
+
+Параметры подключения к Kafka и PostgreSQL заданы в `application.yml`.
